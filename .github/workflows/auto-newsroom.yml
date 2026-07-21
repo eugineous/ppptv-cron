@@ -1,0 +1,42 @@
+# Scheduler for the PPP TV auto-newsroom (ppptv.online).
+# Lives in its own public repo because public-repo Actions minutes are free.
+# It only pings the site: all logic and secrets live server-side on Vercel.
+name: auto-newsroom
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: auto-newsroom
+  cancel-in-progress: false
+
+env:
+  SITE: https://ppp-tv-site-final.vercel.app
+
+jobs:
+  auto-post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger auto-post
+        run: |
+          curl -fsS --max-time 180 \n            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \n            "$SITE/api/cron/auto-post" | tee result.json
+          echo
+          if grep -q '"configured":false' result.json; then
+            echo "::warning::Meta Graph API tokens not configured yet - see docs/SETUP-META.md in ppp-tv-site-"
+          fi
+
+  index-ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Daily IndexNow ping (midnight UTC runs only)
+        run: |
+          hour=$(date -u +%H); min=$(date -u +%M)
+          if [ "$hour" = "00" ] && [ "$min" -lt 30 ]; then
+            curl -fsS --max-time 60 "$SITE/api/cron/ping-search-engines" || true
+          else
+            echo "Skipping - runs once daily at 00:0x UTC"
+          fi
