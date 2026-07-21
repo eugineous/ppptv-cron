@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Trigger auto-post
         run: |
-          curl -fsS --max-time 180 \n            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \n            "$SITE/api/cron/auto-post" | tee result.json
+          curl -fsS --max-time 180 -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "$SITE/api/cron/auto-post" | tee result.json
           echo
           if grep -q '"configured":false' result.json; then
             echo "::warning::Meta Graph API tokens not configured yet - see docs/SETUP-META.md in ppp-tv-site-"
