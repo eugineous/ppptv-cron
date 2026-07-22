@@ -1,11 +1,12 @@
 # Scheduler for the PPP TV auto-newsroom (ppptv.online).
-# Lives in its own public repo because public-repo Actions minutes are free.
-# It only pings the site: all logic and secrets live server-side on Vercel.
+# Fires the trigger EVERY HOUR, but sleeps a random 0-18 minutes first so
+# posts never land at a fixed minute - organic-looking timing keeps Meta's
+# spam heuristics happy. Daily IndexNow ping keeps search engines fresh.
 name: auto-newsroom
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "3 * * * *"
   workflow_dispatch: {}
 
 concurrency:
@@ -18,11 +19,16 @@ env:
 jobs:
   auto-post:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 25
     steps:
+      - name: Random jitter (0-18 min) so posting time is never predictable
+        run: |
+          J=$((RANDOM % 1080))
+          echo "sleeping ${J}s"
+          sleep $J
       - name: Trigger auto-post
         run: |
-          curl -fsS --max-time 180 -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "$SITE/api/cron/auto-post" | tee result.json
+          curl -fsS --max-time 280 -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "$SITE/api/cron/auto-post" | tee result.json
           echo
           if grep -q '"configured":false' result.json; then
             echo "::warning::Meta Graph API tokens not configured yet - see docs/SETUP-META.md in ppp-tv-site-"
@@ -32,11 +38,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Daily IndexNow ping (midnight UTC runs only)
+      - name: Daily IndexNow ping (midnight UTC run only)
         run: |
-          hour=$(date -u +%H); min=$(date -u +%M)
-          if [ "$hour" = "00" ] && [ "$min" -lt 30 ]; then
+          hour=$(date -u +%H)
+          if [ "$hour" = "00" ]; then
             curl -fsS --max-time 60 "$SITE/api/cron/ping-search-engines" || true
           else
-            echo "Skipping - runs once daily at 00:0x UTC"
+            echo "Skipping - runs once daily at 00:xx UTC"
           fi
