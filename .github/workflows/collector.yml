@@ -1,0 +1,28 @@
+# SYSTEM 1 - THE COLLECTOR. Every 15 minutes (with 0-4 min jitter) it tells
+# the newsroom to sweep every source, paraphrase, byline, publish to the
+# site, and queue the best stories for the social poster.
+name: collector
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: collector
+  cancel-in-progress: false
+
+env:
+  SITE: https://ppp-tv-site-final.vercel.app
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Jitter 0-4 min
+        run: sleep $((RANDOM % 240))
+      - name: Run the collector
+        run: |
+          curl -fsS --max-time 320 -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "$SITE/api/cron/collect" | tee result.json
+          echo
