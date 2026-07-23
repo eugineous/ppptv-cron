@@ -1,5 +1,15 @@
 {
  "items": {
+  "manual-route-test-1784780571678-vwg9ab": {
+   "url": "https://example.com/manual-test-1784780571678",
+   "title": "Manual Route Test 1784780571678",
+   "image": "https://example.com/x.jpg",
+   "niche": "BUZZ",
+   "author": "Test",
+   "published": "2026-07-23T04:22:51.678Z",
+   "source": "Test",
+   "at": 1784780576010
+  },
   "kipa-wa-mexico-guillermo-ochoa-astaafu-soka-baada-ya-miaka-22-1kalei": {
    "url": "https://globalpublishers.co.tz/2026/07/23/kipa-wa-mexico-guillermo-ochoa-astaafu-soka-baada-ya-miaka-22/",
    "title": "Kipa wa Mexico Guillermo Ochoa Astaafu Soka Baada ya Miaka 22",
@@ -2691,5 +2701,5 @@
    "at": 1784737729039
   }
  },
- "updatedAt": "2026-07-23T04:07:07.641Z"
+ "updatedAt": "2026-07-23T04:22:56.011Z"
 }
