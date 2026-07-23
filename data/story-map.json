@@ -1,5 +1,15 @@
 {
  "items": {
+  "test-story-cdata-fix-verification-1784778199196-q14a03": {
+   "url": "https://example.com/test-1784778199196",
+   "title": "Test Story CDATA Fix Verification 1784778199196",
+   "image": "https://example.com/img.jpg",
+   "niche": "BUZZ",
+   "author": "Test Author",
+   "published": "2026-07-23T03:43:19.196Z",
+   "source": "Test Source",
+   "at": 1784778200513
+  },
   "zack-apella-tiktoker-s-brother-asserts-kenyans-are-reversing-mon-17bt3u": {
    "url": "https://www.tuko.co.ke/entertainment/celebrities/633689-zack-apella-tiktokers-brother-claims-kenyans-reversing-money-burial-fundraiser/",
    "title": "Zack Apella: TikToker’s brother asserts Kenyans are reversing money sent to burial fundraiser",
@@ -1381,5 +1391,5 @@
    "at": 1784737729039
   }
  },
- "updatedAt": "2026-07-23T03:18:36.175Z"
+ "updatedAt": "2026-07-23T03:43:20.513Z"
 }
